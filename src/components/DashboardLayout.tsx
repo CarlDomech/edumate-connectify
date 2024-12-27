@@ -50,25 +50,64 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r transform ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static`}
-      >
-        <div className="h-full flex flex-col">
-          <div className="flex items-center justify-between h-16 px-4 border-b">
-            <Link to="/dashboard" className="text-xl font-bold text-primary-600">
-              EduMate
-            </Link>
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
+        <div className="flex items-center justify-between h-16 px-4">
+          <div className="flex items-center lg:hidden">
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden"
-              onClick={() => setSidebarOpen(false)}
+              onClick={() => setSidebarOpen(!sidebarOpen)}
             >
-              <X className="h-5 w-5" />
+              {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
+          </div>
+          <div className="flex-1 lg:pl-64" /> {/* Spacer to align with sidebar */}
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="icon">
+              <HelpCircle className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <Settings className="h-5 w-5" />
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="flex items-center">
+                    <User className="mr-2 h-4 w-4" />
+                    Profile Settings
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Log Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      </header>
+
+      {/* Sidebar */}
+      <div
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r transform ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static`}
+      >
+        <div className="flex flex-col h-full pt-16"> {/* Added pt-16 to account for header height */}
+          <div className="flex items-center h-16 px-4 border-b">
+            <Link to="/dashboard" className="text-xl font-bold text-primary-600">
+              EduMate
+            </Link>
           </div>
           <nav className="flex-1 p-4 space-y-1">
             {navigation.map((item) => {
@@ -89,61 +128,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 min-w-0 flex flex-col lg:pl-64">
-        {/* Header */}
-        <header className="sticky top-0 z-10 bg-white border-b shadow-sm">
-          <div className="flex items-center justify-between h-16 px-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
-
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="icon">
-                <HelpCircle className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon">
-                <Settings className="h-5 w-5" />
-              </Button>
-              
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full">
-                    <Avatar>
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem asChild>
-                    <Link to="/profile" className="flex items-center">
-                      <User className="mr-2 h-4 w-4" />
-                      Profile Settings
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="text-red-600">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Log Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-        </header>
-
-        {/* Main content area */}
-        <main className="flex-1 p-6">
-          <div className="max-w-7xl mx-auto">
-            {children}
-          </div>
-        </main>
-      </div>
+      <main className="lg:pl-64 pt-16"> {/* Added pt-16 to account for header height */}
+        <div className="max-w-7xl mx-auto p-6">
+          {children}
+        </div>
+      </main>
     </div>
   );
 };
