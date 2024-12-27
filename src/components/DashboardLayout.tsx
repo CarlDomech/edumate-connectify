@@ -53,16 +53,14 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
         <div className="flex items-center justify-between h-16 px-4">
-          <div className="flex items-center lg:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-            >
-              {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
-          </div>
-          <div className="flex-1 lg:pl-64" /> {/* Spacer to align with sidebar */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="lg:hidden"
+          >
+            {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="icon">
               <HelpCircle className="h-5 w-5" />
@@ -98,12 +96,12 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       </header>
 
       {/* Sidebar */}
-      <div
+      <aside
         className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static`}
       >
-        <div className="flex flex-col h-full pt-16"> {/* Added pt-16 to account for header height */}
+        <div className="flex flex-col h-full pt-16"> {/* Account for header height */}
           <div className="flex items-center h-16 px-4 border-b">
             <Link to="/dashboard" className="text-xl font-bold text-primary-600">
               EduMate
@@ -116,19 +114,21 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`nav-link ${isActive ? "active" : ""}`}
+                  className={`flex items-center px-4 py-2 rounded-md text-sm font-medium ${
+                    isActive ? "bg-gray-100 text-primary-600" : "text-gray-700 hover:bg-gray-50"
+                  }`}
                 >
-                  <item.icon className="h-5 w-5" />
+                  <item.icon className="mr-3 h-5 w-5" />
                   {item.name}
                 </Link>
               );
             })}
           </nav>
         </div>
-      </div>
+      </aside>
 
       {/* Main content */}
-      <main className="lg:pl-64 pt-16"> {/* Added pt-16 to account for header height */}
+      <main className="lg:pl-64 pt-16"> {/* Account for header height */}
         <div className="max-w-7xl mx-auto p-6">
           {children}
         </div>
