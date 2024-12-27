@@ -6,10 +6,22 @@ import {
   Users, 
   BookOpen, 
   Calendar, 
-  Settings, 
+  Settings,
   Menu, 
-  X 
+  X,
+  HelpCircle,
+  LogOut,
+  User
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useToast } from "@/components/ui/use-toast";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -18,6 +30,7 @@ interface DashboardLayoutProps {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
+  const { toast } = useToast();
 
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -26,6 +39,14 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     { name: "Calendar", href: "/calendar", icon: Calendar },
     { name: "Settings", href: "/settings", icon: Settings },
   ];
+
+  const handleLogout = () => {
+    toast({
+      title: "Logging out...",
+      description: "You have been successfully logged out.",
+    });
+    // Add actual logout logic here
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -68,8 +89,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 min-w-0 flex flex-col">
-        <div className="sticky top-0 z-10 bg-white border-b">
+      <div className="flex-1 min-w-0 flex flex-col lg:pl-64">
+        {/* Header */}
+        <header className="sticky top-0 z-10 bg-white border-b shadow-sm">
           <div className="flex items-center justify-between h-16 px-4">
             <Button
               variant="ghost"
@@ -79,14 +101,48 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             >
               <Menu className="h-5 w-5" />
             </Button>
+
             <div className="flex items-center space-x-4">
+              <Button variant="ghost" size="icon">
+                <HelpCircle className="h-5 w-5" />
+              </Button>
               <Button variant="ghost" size="icon">
                 <Settings className="h-5 w-5" />
               </Button>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <Avatar>
+                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="flex items-center">
+                      <User className="mr-2 h-4 w-4" />
+                      Profile Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Log Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
-        </div>
-        <main className="flex-1 p-4">{children}</main>
+        </header>
+
+        {/* Main content area */}
+        <main className="flex-1 p-6">
+          <div className="max-w-7xl mx-auto">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   );
